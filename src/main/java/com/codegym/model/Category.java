@@ -15,6 +15,9 @@ public class Category {
     private String name;
     private String description;
 
+    @JsonIgnore
+    @OneToMany(targetEntity = Book.class)
+    private List<Book> books;
     public Category() {
     }
 

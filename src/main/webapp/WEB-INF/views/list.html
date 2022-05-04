@@ -6,7 +6,7 @@
 </head>
 <body>
 <h1>Book Management</h1>
-<form>
+<form id="addNewBook" th:object="${books}">
     <table>
         <tr>
             <td>Name: </td>
@@ -23,7 +23,7 @@
         <tr>
              <td>Category:</td>
              <td>
-                  <select id="category">
+                  <select id="category" name="category">
                       <th:block th:each="c: ${category}">
                           <option th:value="${c.id}" th:text="${c.name}"></option>
                       </th:block>
@@ -31,7 +31,7 @@
              </td>
         </tr>
     </table>
-    <input type="submit" th:value="Add" onclick="addBook()">
+    <input type="submit" value="Add" onclick="addBook()">
 </form>
 <h2>List book</h2>
 <table id="listBook">
@@ -70,28 +70,25 @@
             name: name,
             author: author,
             price: price,
-            category: category
-        }
-        let newBookJson = JSON.stringify(newBook);
+            category:
+                {id:parseInt(category)}
+        };
 
         $.ajax({
-            headers:{
+            headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
-            //method
-            type:"POST",
-            //du lieu gui len
-            data: newBookJson,
-            //ten API
+            type: "POST",
+            data: JSON.stringify(newBook),
+            //tên API
             url: "/books",
-
-            success: showListBook
-
+            //xử lý khi thành công
+            success: successHandler
         });
         event.preventDefault();
     }
-    function showListBook(){
+    function successHandler(){
         $.ajax({
             type: "GET",
             url: "/books",
@@ -111,7 +108,7 @@
             <td>${books[i].name}</td>
             <td>${books[i].author}</td>
             <td>${books[i].price}</td>
-            <td>${books[i].category}</td>
+            <td>${books[i].category.name}</td>
             <td>
                <a href="${books[i].id}" onclick="deleteBook(this)" class="deleteBook">Delete</a>
 </td>
@@ -127,7 +124,7 @@
             type:"DELETE",
             url:`/books/${IdBook}`,
 
-            success: showListBook
+            success: successHandler
         })
         event.preventDefault();
     }

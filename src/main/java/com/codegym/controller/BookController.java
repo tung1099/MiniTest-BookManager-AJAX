@@ -27,7 +27,7 @@ public class BookController {
     }
 
 
-    @PostMapping("")
+    @PostMapping
     public ResponseEntity<Book> saveBook(@RequestBody Book book){
         bookService.save(book);
         return new ResponseEntity<>(HttpStatus.CREATED);
@@ -43,6 +43,14 @@ public class BookController {
     public ResponseEntity<Iterable<Book>> allBooks() {
         return new ResponseEntity<>(bookService.findAll(), HttpStatus.OK);
     }
+    @GetMapping("/{id}")
+    private ResponseEntity<Book> findById(@PathVariable Long id){
+        Optional<Book> book = bookService.findById(id);
+        if(!book.isPresent()){
+            return new ResponseEntity<>(book.get(),HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Book> deleteBook(@PathVariable Long id) {
@@ -54,6 +62,7 @@ public class BookController {
         return new ResponseEntity<>(bookOptional.get(), HttpStatus.NO_CONTENT);
     }
 
+
     @PutMapping("/{id}")
     public ResponseEntity<Book> updateBook(@PathVariable Long id, @RequestBody Book book) {
         Optional<Book> bookOptional = bookService.findById(id);
@@ -63,12 +72,6 @@ public class BookController {
         book.setId(bookOptional.get().getId());
         bookService.save(book);
         return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-
-    @GetMapping("/{id}")
-    public ResponseEntity<Book> findOne(@PathVariable Long id){
-        return new ResponseEntity<>(bookService.findById(id).get(),HttpStatus.OK);
     }
 
 }
