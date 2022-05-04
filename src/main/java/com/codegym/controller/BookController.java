@@ -27,9 +27,10 @@ public class BookController {
     }
 
 
-    @PostMapping
-    public ResponseEntity<Book> createBook(@RequestBody Book book) {
-        return new ResponseEntity<>(bookService.save(book), HttpStatus.CREATED);
+    @PostMapping("")
+    public ResponseEntity<Book> saveBook(@RequestBody Book book){
+        bookService.save(book);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
     @GetMapping("/list")
     public ModelAndView getAllBook() {
@@ -54,14 +55,16 @@ public class BookController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Book> updateBook(@PathVariable Long id, @RequestBody Book book){
+    public ResponseEntity<Book> updateBook(@PathVariable Long id, @RequestBody Book book) {
         Optional<Book> bookOptional = bookService.findById(id);
         if (!bookOptional.isPresent()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         book.setId(bookOptional.get().getId());
-        return new ResponseEntity<>(bookService.save(book), HttpStatus.NO_CONTENT);
+        bookService.save(book);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<Book> findOne(@PathVariable Long id){

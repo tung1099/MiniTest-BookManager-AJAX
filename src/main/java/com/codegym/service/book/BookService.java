@@ -1,12 +1,15 @@
 package com.codegym.service.book;
 
 import com.codegym.model.Book;
+import com.codegym.model.Category;
 import com.codegym.repository.IBookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-public class BookService implements IBookService{
+@Service
+public class BookService implements IBookService {
     @Autowired
     private IBookRepository bookRepository;
 
@@ -21,13 +24,15 @@ public class BookService implements IBookService{
     }
 
     @Override
-    public Book save(Book book) {
-        return bookRepository.save(book);
+    public void save(Book book) {
+        bookRepository.save(book);
+
     }
 
     @Override
     public void remove(Long id) {
-
         bookRepository.deleteById(id);
     }
 }
+
+
